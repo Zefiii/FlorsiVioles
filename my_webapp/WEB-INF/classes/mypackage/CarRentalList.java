@@ -21,25 +21,43 @@ public class CarRentalList extends HttpServlet {
     PrintWriter out = res.getWriter();
     String nombre = req.getParameter("userid");
     cont ++;
-    out.println("<html><big>Hola Amigo "+ nombre + "</big><br>"+
-                cont + " Accesos desde su carga.</html>");
-    JSONParser parser = new JSONParser();
+   
 
-    try {
+	JSONObject obj;
+	String fileName = "/home/alumne/Documents/apache-tomcat-9.0.5/webapps/my_webapp/cotxes.json";
+	String line = null;
 
-	    Object obj = parser.parse(new FileReader("/home/alumne/Downloads/tomcat/p1_servlets/apache-tomcat-9.0.5/webapps/my_webapp/cotxes.json"));
+	try {
+				
+		FileReader fileReader = new FileReader(fileName);
 
-	    JSONObject jsonObject = (JSONObject) obj;
-	    out.println(jsonObject);
-    }
-    catch (IOException e){
-	 e.printStackTrace();
-    }
-    catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-  }
+		
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		//Falta que quedi maco
+		while((line = bufferedReader.readLine()) != null) {
+			obj = (JSONObject) new JSONParser().parse(line);
+			out.println("<p>" + " Nom: " + (String)obj.get("nom") +
+			" Motor: " +(String)obj.get("motor") +
+			 " Nombre de vehicles: " + (String)obj.get("num_vehi") +
+			 " Durada en dies: " + (String)obj.get("dies") +
+			 " Descompte: " + (String)obj.get("descompte") + "</p>");
+										   
+		}
+		
+		bufferedReader.close();         
+	}
+	catch(FileNotFoundException ex) {
+		System.out.println("Unable to open file '" + fileName + "'");                
+	}
+	catch(IOException ex) {
+		System.out.println("Error reading file '" + fileName + "'");                  
+		
+	} catch (ParseException e) {
+		
+		e.printStackTrace();
+	}
+}
+  
 
 
    
